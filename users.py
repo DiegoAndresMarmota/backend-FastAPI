@@ -7,6 +7,7 @@ app = FastAPI()
 
 
 class User(BaseModel):
+    id: int
     name: str
     surname: str
     age: int
@@ -15,25 +16,46 @@ class User(BaseModel):
 
 
 users_list = [
-            User(name="Diego", surname="Andres", age=35, single=True, email="diegoandres@mail.com"),
-            User(name="Susan", surname="Marcela", age=33, single=False, email="susanmarcela@mail.com"),
-            User(name="Jose", surname="Oscar", age=37, single=False, email="joseoscar@mail.com"),]
+            User(id= 1, name="Diego", surname="Andres", age=35, single=True, email="diegoandres@mail.com"),
+            User(id=2, name="Susan", surname="Marcela", age=33,
+            single=False, email="susanmarcela@mail.com"),
+            User(id=3, name="Jose", surname="Oscar", age=37, single=False, email="joseoscar@mail.com"),
+            ]
 
 
-@app.get("/usersjson")
-async def usersjson():
-    return [
-        {"name": "Diego", "surname": "Andres",
-            "age": 35, "single": True, "email": "diegoandres@mail.com"},
-        {"name": "Susan", "surname": "Marcela",
-            "age": 33, "single": False, "email": "susanmarcela@mail.com"},
-        {"name": "Jose", "surname": "Oscar",
-            "age": 37, "single": False, "email": "joseoscar@mail.com"},
-    ]
+# @app.get("/usersjson")
+# async def usersjson():
+#     return [
+#         {"name": "Diego", "surname": "Andres",
+#             "age": 35, "single": True, "email": "diegoandres@mail.com"},
+#         {"name": "Susan", "surname": "Marcela",
+#             "age": 33, "single": False, "email": "susanmarcela@mail.com"},
+#         {"name": "Jose", "surname": "Oscar",
+#             "age": 37, "single": False, "email": "joseoscar@mail.com"},
+#     ]
 
+def search_user(id: int):
+    users = filter(lambda user: user.id == id, users_list)
+    try:
+        return list(users)[0]
+    except:
+        return {"error": "No se ha encontrado una id asociado a ese usuario"}
+
+#Paths
 
 @app.get("/users")
 async def users():
     return users_list
 
-# Inicia el server: uvicorn users:app --reload
+
+@app.get("/user/{id}")
+async def user(id: int):
+    return search_user(id)
+
+
+
+
+
+
+
+# Inicia el server con: uvicorn users:app --reload
