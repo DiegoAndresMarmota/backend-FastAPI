@@ -80,7 +80,16 @@ async def user(user: User):
                 return {"error": "El usuario no ha sido actualizado"}
     return user
 
-
+app.delete("/user/{id}")
+async def user(id: int):
+    found = False
+    for index, saved_user in enumerate(users_list):
+        if saved_user.id == id:
+            del users_list[index]
+            found = True
+    if not found:
+        return {"error": "El usuario no ha sido eliminado"}
+    
 
 
 # Inicia el server con: uvicorn users:app --reload
