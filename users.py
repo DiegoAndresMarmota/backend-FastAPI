@@ -63,7 +63,16 @@ async def user(user: User):
         return {"error": "No se ha podido agregar un nuevo usuario"}
     
 
-
+@app.put("/user/")
+async def user(user: User):
+        for index, saved_user in enumerate(users_list):
+            try:
+                if saved_user.id in user.id:
+                    users_list[index] = user
+                    return {"error": "El usuario ha sido editado"}
+            except:
+                return {"error": "El usuario no ha sido encontrado"}
+                    
 
 
 
