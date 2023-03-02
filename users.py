@@ -16,10 +16,12 @@ class User(BaseModel):
 
 
 users_list = [
-            User(id= 1, name="Diego", surname="Andres", age=35, single=True, email="diegoandres@mail.com"),
+            User(id=1, name="Diego", surname="Andres", age=35,
+                 single=True, email="diegoandres@mail.com"),
             User(id=2, name="Susan", surname="Marcela", age=33,
             single=False, email="susanmarcela@mail.com"),
-            User(id=3, name="Jose", surname="Oscar", age=37, single=False, email="joseoscar@mail.com"),
+            User(id=3, name="Jose", surname="Oscar", age=37,
+                 single=False, email="joseoscar@mail.com"),
             ]
 
 
@@ -41,7 +43,8 @@ def search_user(id: int):
     except:
         return {"error": "No se ha encontrado una id asociado a ese usuario"}
 
-#Paths
+# Paths
+
 
 @app.get("/users")
 async def users():
@@ -52,6 +55,7 @@ async def users():
 async def user(id: int):
     return search_user(id)
 
+
 @app.post("/user/")
 async def user(user: User):
     try:
@@ -59,20 +63,22 @@ async def user(user: User):
             return {"error": "El usuario ya existe"}
         else:
             users_list.append(user)
+            return user
     except:
         return {"error": "No se ha podido agregar un nuevo usuario"}
-    
+
 
 @app.put("/user/")
 async def user(user: User):
-        for index, saved_user in enumerate(users_list):
-            try:
-                if saved_user.id in user.id:
-                    users_list[index] = user
-                    return {"error": "El usuario ha sido editado"}
-            except:
-                return {"error": "El usuario no ha sido encontrado"}
-                    
+    found = False
+    for index, saved_user in enumerate(users_list):
+            if saved_user.id in user.id:
+                users_list[index] = user
+                found = True
+
+    if not found:
+                return {"error": "El usuario no ha sido actualizado"}
+    return user
 
 
 
