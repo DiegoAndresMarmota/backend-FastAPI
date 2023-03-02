@@ -52,6 +52,16 @@ async def users():
 async def user(id: int):
     return search_user(id)
 
+@app.post("/user/")
+async def user(user: User):
+    try:
+        if type(search_user(user.id)) == User:
+            return {"error": "El usuario ya existe"}
+        else:
+            users_list.append(user)
+    except:
+        return {"error": "No se ha podido agregar un nuevo usuario"}
+    
 
 
 
